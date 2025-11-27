@@ -48,8 +48,8 @@ EOF
 
 # Ajout de l'include dans le fichier fr (seulement si pas déjà présent)
 if ! grep -q 'include "mswindows-capslock"' "$FR_FILE"; then
-    # Insertion après la première ligne contenant "default"
-    sudo sed -i '/^default/a include "mswindows-capslock"' "$FR_FILE"
+    # Insertion après la ligne 'include "latin"' avec indentation
+    sudo sed -i '/include "latin"/a\    include "mswindows-capslock"' "$FR_FILE"
     echo "Include ajouté dans $FR_FILE"
 else
     echo "Include déjà présent dans $FR_FILE, rien à faire"
