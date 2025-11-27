@@ -59,6 +59,6 @@ fi
 # Installation de Bitwarden
 # =============================================================================
 
-flatpak install -y flathub com.bitwarden.desktop || true
+flatpak install -y --noninteractive flathub com.bitwarden.desktop 2>&1 | cat || true
 
 echo "Installation terminée !"
