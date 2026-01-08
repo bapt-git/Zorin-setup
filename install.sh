@@ -17,6 +17,18 @@ Pin-Priority: 1001
 sudo apt update
 sudo apt install -y firefox
 
+
+# =============================================================================
+# Forcer la locale système en français
+# =============================================================================
+
+apt install -y locales
+
+sed -i 's/^# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+
+update-locale LANG=fr_FR.UTF-8 LC_TIME=fr_FR.UTF-8
+
 # =============================================================================
 # Configuration clavier AZERTY - Caps Lock agit comme Shift Lock sur chiffres
 # =============================================================================
