@@ -62,3 +62,21 @@ fi
 flatpak install -y --noninteractive flathub com.bitwarden.desktop 2>&1 | cat || true
 
 echo "Installation terminée !"
+
+# =============================================================================
+# Forcer Xorg (désactiver Wayland) pour compatibilité AnyDesk
+# =============================================================================
+
+GDM_CONF="/etc/gdm3/custom.conf"
+
+# Créer le fichier si absent
+touch "$GDM_CONF"
+
+# Si WaylandEnable existe (commenté ou non), le forcer à false
+if grep -q '^#\?WaylandEnable=' "$GDM_CONF"; then
+    sed -i 's/^#\?WaylandEnable=.*/WaylandEnable=false/' "$GDM_CONF"
+else
+    echo 'WaylandEnable=false' >> "$GDM_CONF"
+fi
+
+echo "Wayland désactivé (Xorg activé). Un redémarrage est nécessaire."
