@@ -63,20 +63,33 @@ flatpak install -y --noninteractive flathub com.bitwarden.desktop 2>&1 | cat || 
 
 echo "Installation terminée !"
 
+
 # =============================================================================
-# Forcer Xorg (désactiver Wayland) pour compatibilité AnyDesk
+# Désactivation optionnelle de Wayland (Xorg) pour compatibilité AnyDesk
 # =============================================================================
 
 GDM_CONF="/etc/gdm3/custom.conf"
 
-# Créer le fichier si absent
-touch "$GDM_CONF"
+echo
+read -r -p "Voulez-vous désactiver Wayland (recommandé pour AnyDesk) ? [o/N] " response
 
-# Si WaylandEnable existe (commenté ou non), le forcer à false
-if grep -q '^#\?WaylandEnable=' "$GDM_CONF"; then
-    sed -i 's/^#\?WaylandEnable=.*/WaylandEnable=false/' "$GDM_CONF"
-else
-    echo 'WaylandEnable=false' >> "$GDM_CONF"
-fi
+case "$response" in
+  [oO]|[oO][uU][iI])
+    # Créer le fichier si absent
+    touch "$GDM_CONF"
 
-echo "Wayland désactivé (Xorg activé). Un redémarrage est nécessaire."
+    # Forcer WaylandEnable=false (commenté ou non)
+    if grep -q '^#\?WaylandEnable=' "$GDM_CONF"; then
+        sed -i 's/^#\?WaylandEnable=.*/WaylandEnable=false/' "$GDM_CONF"
+    else
+        echo 'WaylandEnable=false' >> "$GDM_CONF"
+    fi
+
+    echo "✅ Wayland désactivé. Xorg sera utilisé."
+    echo "⚠️ Un redémarrage ou une déconnexion est nécessaire."
+    ;;
+  *)
+    echo "ℹ️ Wayland conservé. AnyDesk ne pourra pas prendre la main."
+    ;;
+esac
+
